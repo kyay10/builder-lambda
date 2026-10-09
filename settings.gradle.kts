@@ -1,13 +1,14 @@
 pluginManagement {
     repositories {
+        maven("https://packages.jetbrains.team/maven/p/compiler-plugin-dev-kit/eap")
         mavenCentral()
         gradlePluginPortal()
     }
-    
 }
 
 dependencyResolutionManagement {
     repositories {
+        maven("https://packages.jetbrains.team/maven/p/compiler-plugin-dev-kit/eap")
         mavenCentral()
     }
 }
@@ -22,3 +23,7 @@ project(":builder-lambda-plugin").projectDir = file("gradle-plugin")
 
 include("builder-lambda-support-lib")
 project(":builder-lambda-support-lib").projectDir = file("support-lib")
+
+plugins {
+    kotlin("compiler.plugin.devkit") version "0.0.3-dev-0d29bbc"
+}

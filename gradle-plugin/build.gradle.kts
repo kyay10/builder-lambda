@@ -1,42 +1,21 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.buildconfig)
-    alias(libs.plugins.gradle.plugin)
+    pluginDevKit("gradle-plugin")
     id("com.gradle.plugin-publish") version "2.2.1"
 }
 
-sourceSets {
-    main {
-        java.setSrcDirs(listOf("src"))
-        resources.setSrcDirs(listOf("resources"))
-    }
-    test {
-        java.setSrcDirs(listOf("test"))
-        resources.setSrcDirs(listOf("testResources"))
-    }
-}
-
-dependencies {
-    implementation(libs.kotlin.gradle.plugin.api)
-    testImplementation(libs.kotlin.test.junit5)
-}
-
-buildConfig {
-    packageName(project.group.toString())
-
-    buildConfigField("String", "KOTLIN_PLUGIN_ID", "\"com.serranofp.builder.lambda\"")
-
-    val pluginProject = project(":builder-lambda-compiler-plugin")
-    buildConfigField("String", "KOTLIN_PLUGIN_GROUP", "\"${pluginProject.group}\"")
-    buildConfigField("String", "KOTLIN_PLUGIN_NAME", "\"${pluginProject.name}\"")
-    buildConfigField("String", "KOTLIN_PLUGIN_VERSION", "\"${pluginProject.version}\"")
-
-    val annotationsProject = project(":builder-lambda-support-lib")
-    buildConfigField(
-        type = "String",
-        name = "ANNOTATIONS_LIBRARY_COORDINATES",
-        expression = "\"${annotationsProject.group}:${annotationsProject.name}:${annotationsProject.version}\""
+pluginDevKit {
+    companionLibrary(project(":builder-lambda-support-lib"))
+    compilerPlugin = org.jetbrains.kotlin.compiler.plugin.devkit.ProjectOrGav.LocalProject(
+        project(":builder-lambda-compiler-plugin").isolated
     )
+}
+
+kotlin {
+    sourceSets {
+        main {
+            kotlin.setSrcDirs(listOf("src"))
+        }
+    }
 }
 
 gradlePlugin {
