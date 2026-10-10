@@ -1,42 +1,12 @@
 package com.serranofp.builder.lambda.runners
 
-import com.serranofp.builder.lambda.services.configurePlugin
-import org.jetbrains.kotlin.js.test.runners.AbstractJsTest
-import org.jetbrains.kotlin.test.FirParser
-import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
-import org.jetbrains.kotlin.test.directives.CodegenTestDirectives
-import org.jetbrains.kotlin.test.services.EnvironmentBasedStandardLibrariesPathProvider
-import org.jetbrains.kotlin.test.services.KotlinStandardLibrariesPathProvider
+import org.jetbrains.kotlin.compiler.plugin.devkit.runners.DevKitJsBoxTest
+import org.jetbrains.kotlin.compiler.plugin.devkit.services.configurePlugin
+import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
 
-open class AbstractJsBoxTest : AbstractJsTest(
-    pathToTestDir = "compiler-plugin/testData/box",
-    testGroupOutputDirPrefix = "box/",
-    parser = FirParser.LightTree,
-) {
-    override fun createKotlinStandardLibrariesPathProvider(): KotlinStandardLibrariesPathProvider {
-        return EnvironmentBasedStandardLibrariesPathProvider
+open class AbstractJsBoxTest : DevKitJsBoxTest({
+    configurePlugin(com.serranofp.builder.lambda.BuilderLambdaComponentRegistrar())
+    defaultDirectives {
+        -FirDiagnosticsDirectives.FIR_DUMP
     }
-
-    override fun configure(builder: TestConfigurationBuilder) {
-        super.configure(builder)
-
-        with(builder) {
-            /*
-             * Containers of different directives, which can be used in tests:
-             * - ModuleStructureDirectives
-             * - LanguageSettingsDirectives
-             * - DiagnosticsDirectives
-             * - FirDiagnosticsDirectives
-             * - CodegenTestDirectives
-             * - JvmEnvironmentConfigurationDirectives
-             *
-             * All of them are located in `org.jetbrains.kotlin.test.directives` package
-             */
-            defaultDirectives {
-                +CodegenTestDirectives.DUMP_IR
-            }
-
-            configurePlugin()
-        }
-    }
-}
+})
