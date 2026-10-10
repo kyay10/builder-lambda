@@ -1,15 +1,25 @@
 pluginManagement {
     repositories {
+        maven("https://packages.jetbrains.team/maven/p/compiler-plugin-dev-kit/eap")
         mavenCentral()
         gradlePluginPortal()
     }
-    
+}
+
+plugins {
+    id("org.jetbrains.kotlin.compiler.plugin.devkit") version "0.0.3-dev-0d29bbc"
 }
 
 dependencyResolutionManagement {
     repositories {
+        maven("https://packages.jetbrains.team/maven/p/compiler-plugin-dev-kit/eap")
         mavenCentral()
     }
+}
+
+pluginDevKit {
+    pluginPackage("com.serranofp.builder.lambda")
+    companionLibrary(":builder-lambda-support-lib")
 }
 
 rootProject.name = "builder-lambda"
