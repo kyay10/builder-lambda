@@ -1,8 +1,9 @@
+import org.jetbrains.kotlin.compiler.plugin.devkit.ProjectOrGav
+
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.buildconfig)
     alias(libs.plugins.gradle.plugin)
     id("com.gradle.plugin-publish") version "2.2.1"
+    pluginDevKit("gradle-plugin")
 }
 
 sourceSets {
@@ -17,26 +18,11 @@ sourceSets {
 }
 
 dependencies {
-    implementation(libs.kotlin.gradle.plugin.api)
     testImplementation(libs.kotlin.test.junit5)
 }
 
-buildConfig {
-    packageName(project.group.toString())
-
-    buildConfigField("String", "KOTLIN_PLUGIN_ID", "\"com.serranofp.builder.lambda\"")
-
-    val pluginProject = project(":builder-lambda-compiler-plugin")
-    buildConfigField("String", "KOTLIN_PLUGIN_GROUP", "\"${pluginProject.group}\"")
-    buildConfigField("String", "KOTLIN_PLUGIN_NAME", "\"${pluginProject.name}\"")
-    buildConfigField("String", "KOTLIN_PLUGIN_VERSION", "\"${pluginProject.version}\"")
-
-    val annotationsProject = project(":builder-lambda-support-lib")
-    buildConfigField(
-        type = "String",
-        name = "ANNOTATIONS_LIBRARY_COORDINATES",
-        expression = "\"${annotationsProject.group}:${annotationsProject.name}:${annotationsProject.version}\""
-    )
+pluginDevKit {
+    compilerPlugin = ProjectOrGav.LocalProject(project(":builder-lambda-compiler-plugin").isolated)
 }
 
 gradlePlugin {
