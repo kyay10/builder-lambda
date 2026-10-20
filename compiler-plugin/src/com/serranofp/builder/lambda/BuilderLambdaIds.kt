@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
 data object BuilderLambdaIds {
-    val PACKAGE = FqName.fromSegments(["com", "serranofp", "builder", "lambda"])
+    val PACKAGE = FqName.fromSegments(listOf("com", "serranofp", "builder", "lambda"))
 
     val BUILD_FUNCTION_NAME = Name.identifier("build")
     val BUILD_FUNCTION_ID = CallableId(PACKAGE, BUILD_FUNCTION_NAME)
